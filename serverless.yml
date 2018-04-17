@@ -11,15 +11,6 @@
 #
 # Happy Coding!
 
-service: clojure-serverless-demo
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
-
-provider:
-  name: aws
-  runtime: java8
 
 # you can overwrite defaults here
 #  stage: dev
@@ -45,13 +36,53 @@ provider:
 #  environment:
 #    variable1: value1
 
-# you can add packaging information here
+service: clojure-serverless-demo
+
+provider:
+  name: aws
+  runtime: java8
+
 package:
   artifact: target/clojure-serverless-demo-standalone.jar
 
 functions:
   apihandler:
     handler: clojure_serverless_demo.ApiHandler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: messages
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTable
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+              Resource: arn:aws:dynamodb:*:*:table/messages
+        Roles:
+          - Ref: IamRoleLambdaExecution
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

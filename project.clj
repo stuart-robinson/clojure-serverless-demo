@@ -15,5 +15,6 @@
                  [com.amazonaws/DynamoDBLocal "1.10.5.1"]
                  [com.taoensso/faraday "1.9.0"]]
   :repositories [["dynamodblocal"  {:url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"}]]
+  :aot [clojure-serverless-demo.aws.lambda]
   :uberjar {:aot :all}
   :uberjar-name "clojure-serverless-demo-standalone.jar")
