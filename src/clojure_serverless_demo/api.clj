@@ -1,12 +1,10 @@
 (ns clojure-serverless-demo.api
   (:require [compojure.core :refer [GET POST defroutes]]
+            [ring.util.response :as r]
             [clojure-serverless-demo.core :as core]
             [clojure-serverless-demo.storage :as storage]
-            [ring.util.response :as r]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.json :refer [wrap-json-params
-                                          wrap-json-response
-                                          wrap-json-body]]))
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]))
 
 (defn builder [db-config]
   (defroutes api
@@ -29,6 +27,5 @@
               (r/response)))))
 
 (defn handler [api]
-  (-> api
-      (wrap-json-body {:keywords? true})
-      wrap-json-response))
+  (-> (wrap-json-body {:keywords? true} api)
+      (wrap-json-response)))

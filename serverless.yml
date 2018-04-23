@@ -46,6 +46,9 @@ package:
   artifact: target/clojure-serverless-demo-standalone.jar
 
 functions:
+  simplehandler:
+    handler: clojure_serverless_demo.SimpleHandler
+
   apihandler:
     handler: clojure_serverless_demo.ApiHandler
     events:

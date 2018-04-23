@@ -14,14 +14,14 @@
                 :secret-key "TOPSECRET"
                 :endpoint "http://localhost:8000"})
 
-(def api (api/handler (api/builder db-config)))
+(def api (api/handler (api/builder {})))
 
 (use-fixtures :once
   (f/with-local-http api)
   (f/with-local-db db-config)
   (f/with-table table-config db-config))
 
-(deftest api-routes-test
+(deftest api-ping-test
   (is (= (:body (http/get "http://localhost:8888/ping" {:as :auto}))
          {:result "pong"})))
 
