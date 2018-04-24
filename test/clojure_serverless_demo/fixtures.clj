@@ -4,16 +4,14 @@
              [ring.adapter.jetty :refer [run-jetty]]
              [clojure-serverless-demo.aws.dynamodb-local :as dynamodb-local]))
 
-(def server-port 8888)
-
-(def ^:dynamic *server-address* (str "http://localhost:" server-port))
-
-(defn with-local-http [handler]
+(defn with-local-http [handler config]
   (fn [f]
-    (let [server (run-jetty handler {:port server-port
+    (let [server (run-jetty handler {:port (:port config)
                                      :join? false})]
-      (f)
-      (.stop server))))
+      (try
+        (f)
+        (finally
+          (.stop server))))))
 
 (def client-opts {:access-key "ACCESSKEY"
                   :secret-key "TOPSECRET"
@@ -25,10 +23,8 @@
       (try
         (.start s)
         (f)
-        (.stop s)
-        (catch Exception e
-          (.stop s)
-          (throw e))))))
+        (finally
+          (.stop s))))))
 
 (defn with-table [table-config db-config]
   (fn [f]

@@ -81,8 +81,7 @@ resources:
           Statement:
             - Effect: Allow
               Action:
-                - dynamodb:GetItem
-                - dynamodb:PutItem
+                - dynamodb:*
               Resource: arn:aws:dynamodb:*:*:table/messages
         Roles:
           - Ref: IamRoleLambdaExecution

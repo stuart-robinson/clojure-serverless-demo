@@ -7,6 +7,7 @@
                  [com.amazonaws/aws-lambda-java-core "1.0.0"]
                  [clj-http "3.7.0"]
                  [compojure "1.6.0"]
+                 [environ "1.1.0"]
                  [ring "1.6.3"]
                  [ring/ring-mock "0.3.2"]
                  [ring/ring-json "0.4.0"]

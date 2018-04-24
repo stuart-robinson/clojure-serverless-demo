@@ -5,6 +5,9 @@
             [clj-http.client :as http]
             [clojure.test :refer :all]))
 
+(def http-config
+  {:port 8888})
+
 (def table-config
   {:name :messages
    :primary-key [:id :s]
@@ -14,26 +17,28 @@
                 :secret-key "TOPSECRET"
                 :endpoint "http://localhost:8000"})
 
-(def api (api/handler (api/builder {})))
+(def api (api/handler (api/builder db-config)))
+
+(def http-addr (str "http://localhost:" (:port http-config)))
 
 (use-fixtures :once
-  (f/with-local-http api)
+  (f/with-local-http api http-config)
   (f/with-local-db db-config)
   (f/with-table table-config db-config))
 
 (deftest api-ping-test
-  (is (= (:body (http/get "http://localhost:8888/ping" {:as :auto}))
+  (is (= (:body (http/get (str http-addr "/ping") {:as :auto}))
          {:result "pong"})))
 
 (deftest api-join-request-test
-  (http/post "http://localhost:8888/join"
+  (http/post (str http-addr "/join")
              {:form-params {:name "test-name"}
               :content-type :json})
-  (http/post "http://localhost:8888/say"
+  (http/post (str http-addr "/say")
              {:form-params {:name "test-name"
                            :message "hello world"}
               :content-type :json})
   (let [results (:body (http/get
-                        "http://localhost:8888/fetch-messages"
+                        (str http-addr "/fetch-messages")
                         {:as :auto}))]
     (is (= ["channel" "test-name"] (map :name results)))))

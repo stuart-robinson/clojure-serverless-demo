@@ -9,7 +9,12 @@
 (defn builder [db-config]
   (defroutes api
     (GET "/ping" []
+         (prn "ping")
          (r/response {:result "pong"}))
+
+    (POST "/echo" {:keys [body] :as request}
+          (prn body)
+          (r/response body))
 
     (GET "/fetch-messages" []
          (-> (storage/fetch-messages db-config)
@@ -27,5 +32,5 @@
               (r/response)))))
 
 (defn handler [api]
-  (-> (wrap-json-body {:keywords? true} api)
+  (-> (wrap-json-body api {:keywords? true})
       (wrap-json-response)))
