@@ -49,8 +49,8 @@
         (f)
         (ring-response->api-gateway-response))))
 
-(def db-config {:access-key (env :aws-access-key-id)
-                :secret-key (env :aws-secret-access-key)
+(def db-config {:access-key (env :x-aws-access-key-id)
+                :secret-key (env :x-aws-secret-access-key)
                 :endpoint (env :endpoint)})
 
 (def api-gateway-handler (-> (api/builder db-config)
