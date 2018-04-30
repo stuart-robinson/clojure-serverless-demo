@@ -11,7 +11,8 @@
 (defn fetch-messages [db-config]
   (far/scan db-config
             (:name table-config)
-            {:limit 10}))
+            {:limit 10
+             :index "channel-timestamp-index"}))
 
 (defn save-message [message db-config]
   (far/put-item db-config
