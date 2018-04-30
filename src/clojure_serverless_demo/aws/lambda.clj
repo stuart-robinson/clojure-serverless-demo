@@ -8,8 +8,6 @@
    :name clojure_serverless_demo.ApiHandler
    :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler]))
 
-(def config {})
-
 (defn api-gateway-request->ring-request
   "coerce an API gateway request to a valid Ring request"
   [request]
@@ -36,12 +34,6 @@
   {:statusCode (str (:status response))
    :body (:body response)
    :headers (:headers response)})
-
-(defn wrap-api-gateway-request [f]
-  (fn [request]
-    (-> (api-gateway-request->ring-request request)
-        (f)
-        (ring-response->api-gateway-response))))
 
 (defn wrap-api-gateway-request [f]
   (fn [request]

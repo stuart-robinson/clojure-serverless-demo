@@ -17,3 +17,5 @@
                 (:name table-config)
                 message)
   {:result "success"})
+
+(defprotocol Storage)
