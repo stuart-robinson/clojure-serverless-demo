@@ -31,7 +31,7 @@
               (r/response)))))
 
 (defn handler [api]
-  (-> (wrap-json-body api {:keywords? true})
-      (wrap-json-response)
-      (wrap-cors :access-control-allow-origin [#".*"]
-                 :access-control-allow-methods [:get :put :post :delete])))
+  (-> (wrap-cors api :access-control-allow-origin [#".*"]
+                     :access-control-allow-methods [:get :put :post :delete])
+      (wrap-json-body {:keywords? true})
+      (wrap-json-response)))

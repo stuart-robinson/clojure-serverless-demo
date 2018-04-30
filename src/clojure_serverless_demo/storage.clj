@@ -10,12 +10,11 @@
 ;; scan should use filter expression to discard messsage older than 10 minutes
 (defn fetch-messages [db-config]
   (far/scan db-config
-            (:name table-config)))
+            (:name table-config)
+            {:limit 10}))
 
 (defn save-message [message db-config]
   (far/put-item db-config
                 (:name table-config)
                 message)
   {:result "success"})
-
-(defprotocol Storage)
