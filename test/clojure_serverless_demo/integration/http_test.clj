@@ -1,17 +1,12 @@
 (ns clojure-serverless-demo.integration.http-test
   (:require [clojure-serverless-demo.fixtures :as f]
             [clojure-serverless-demo.api :as api]
-            [clojure-serverless-demo.storage :as s]
+            [clojure-serverless-demo.config :as config]
             [clj-http.client :as http]
             [clojure.test :refer :all]))
 
 (def http-config
   {:port 8888})
-
-(def table-config
-  {:name :messages
-   :primary-key [:id :s]
-   :throughput {:read 5 :write 1}})
 
 (def db-config {:access-key "ACCESSKEY"
                 :secret-key "TOPSECRET"
@@ -24,7 +19,7 @@
 (use-fixtures :once
   (f/with-local-http api http-config)
   (f/with-local-db db-config)
-  (f/with-table table-config db-config))
+  (f/with-table config/table-config db-config))
 
 (deftest api-ping-test
   (is (= (:body (http/get (str http-addr "/ping") {:as :auto}))
