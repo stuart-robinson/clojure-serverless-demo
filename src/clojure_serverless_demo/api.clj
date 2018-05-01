@@ -14,7 +14,7 @@
 (defn builder [db-config]
   (defroutes api
     (GET "/ping" []
-         (response {:result "pong"} 200 60))
+         (response {:result "pong"} 200 0))
 
     (POST "/echo" {:keys [body] :as request}
           (response body 200 0))
