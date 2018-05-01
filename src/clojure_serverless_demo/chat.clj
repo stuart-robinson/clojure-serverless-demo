@@ -12,4 +12,4 @@
         :message (str name " joined the channel...")}))
 
 (defn process-messages [messages]
-  (take-last 10 (sort-by :timestamp messages)))
+  messages)

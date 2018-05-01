@@ -1,8 +1,9 @@
 (ns clojure-serverless-demo.aws.lambda
   (:require [clojure-serverless-demo.api :as api]
+            [clojure-serverless-demo.config :as config]
             [cheshire.core :refer [generate-stream parse-stream generate-string]]
-            [clojure.java.io :as io]
-            [environ.core :refer [env]])
+            [clojure.java.io :as io])
+
   (:import [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:gen-class
    :name clojure_serverless_demo.ApiHandler
@@ -41,11 +42,8 @@
         (f)
         (ring-response->api-gateway-response))))
 
-(def db-config {:access-key (env :x-aws-access-key-id)
-                :secret-key (env :x-aws-secret-access-key)
-                :endpoint (env :endpoint)})
 
-(def api-gateway-handler (-> (api/builder db-config)
+(def api-gateway-handler (-> (api/builder config/db-config)
                              (api/handler)
                              (wrap-api-gateway-request)))
 
@@ -55,7 +53,7 @@
     (let [request (parse-stream (io/reader input-stream) true)
           logger (.getLogger context)
           _ (.log logger (str request))
-          _ (.log logger (str db-config))
+          _ (.log logger (str (merge config/db-config config/table-config)))
           response (api-gateway-handler request)]
       (.log logger (str response))
       (generate-stream response writer))))

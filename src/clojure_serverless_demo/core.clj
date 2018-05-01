@@ -3,7 +3,7 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [taoensso.faraday :as far]
             [clojure-serverless-demo.api :as api]
-            [clojure-serverless-demo.storage :as storage]))
+            [clojure-serverless-demo.config :as config]))
 
 (def default  {:http-server nil
                :db-server nil})
@@ -15,7 +15,7 @@
                    :secret-key "TOPSECRET"
                    :endpoint "http://localhost:8000"}
         api (api/handler (api/builder db-config))
-        table-config storage/table-config
+        table-config config/table-config
         db-server (local-db/build-server)]
     (swap! server assoc :db-server db-server
            :http-server (run-jetty api {:port 8888 :join? false}))

@@ -41,6 +41,7 @@ service: clojure-serverless-demo
 provider:
   name: aws
   runtime: java8
+  stage: ${opt:stage, 'dev'}
 
 package:
   artifact: target/clojure-serverless-demo-standalone.jar
@@ -53,7 +54,7 @@ functions:
     handler: clojure_serverless_demo.ApiHandler
     events:
       - http:
-          path: /{proxy+}
+          path: /{path}
           method: ANY
 
 resources:
@@ -61,7 +62,7 @@ resources:
     DynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: messages
+        TableName: messages-${self:provider.stage}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -75,14 +76,14 @@ resources:
       Type: AWS::IAM::Policy
       DependsOn: DynamoDbTable
       Properties:
-        PolicyName: lambda-dynamodb
+        PolicyName: lambda-dynamodb-${self:provider.stage}
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
             - Effect: Allow
               Action:
                 - dynamodb:*
-              Resource: arn:aws:dynamodb:*:*:table/messages
+              Resource: arn:aws:dynamodb:*:*:table/messages-${self:provider.stage}
         Roles:
           - Ref: IamRoleLambdaExecution
 
