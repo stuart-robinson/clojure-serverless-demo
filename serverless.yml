@@ -1,0 +1,61 @@
+service: clojure-serverless-demo
+
+provider:
+  name: aws
+  runtime: java8
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-2
+
+# Frontend Deployment Config
+plugins:
+  - serverless-finch
+
+custom:
+  client:
+    bucketName: clojure-serverless-demo-london-${opt:stage, 'dev'}
+    distributionFolder: resources/public/
+
+# Backend Deployment Config
+package:
+  artifact: target/clojure-serverless-demo-standalone.jar
+
+functions:
+  simplehandler:
+    handler: clojure_serverless_demo.SimpleHandler
+
+  apihandler:
+    handler: clojure_serverless_demo.ApiHandler
+    events:
+      - http:
+          path: /{path}
+          method: ANY
+
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: messages-${self:provider.stage}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 20
+          WriteCapacityUnits: 5
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTable
+      Properties:
+        PolicyName: lambda-dynamodb-${self:provider.stage}
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource: arn:aws:dynamodb:*:*:table/messages-${self:provider.stage}
+        Roles:
+          - Ref: IamRoleLambdaExecution
