@@ -7,5 +7,6 @@
 
 (def table-config
   {:name (or (keyword (env :dynamodb-table-name)) :messages-dev)
-   :primary-key [:timestamp :n]
-   :throughput {:read 5 :write 1}})
+   :primary-key [:id :s]
+   :options {:throughput {:read 5 :write 1}
+             :block? true}})

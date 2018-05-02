@@ -3,6 +3,7 @@
 (def debug?
   ^boolean goog.DEBUG)
 
-;;(def host "https://odkas8ut1b.execute-api.eu-west-2.amazonaws.com/prod")
-
-(def host "http://localhost:8888")
+(def host
+  (if debug?
+    "http://localhost:8888"
+    "https://odkas8ut1b.execute-api.eu-west-2.amazonaws.com/prod"))

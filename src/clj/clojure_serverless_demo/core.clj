@@ -23,8 +23,7 @@
     (far/ensure-table db-config
                       (:name table-config)
                       (:primary-key table-config)
-                      {:throughput (:throughput table-config)
-                       :block? true})))
+                      (:options table-config))))
 
 (defn stop-local-server []
   (.stop (:http-server @server))

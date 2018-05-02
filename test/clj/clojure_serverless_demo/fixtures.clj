@@ -31,6 +31,5 @@
     (far/ensure-table db-config
                       (:name table-config)
                       (:primary-key table-config)
-                      {:throughput (:throughput table-config)
-                       :block? true})
+                      (:options table-config))
     (f)))

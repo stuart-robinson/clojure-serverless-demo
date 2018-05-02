@@ -1,60 +1,53 @@
 # clojure-serverless-demo
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+A full-stack clojure application deployed to API Gateway, AWS Lambda, S3 and Dynamodb
 
-## Development Mode
+WARNING: This application was built as a proof-of-concept and as such the code should not be considered production ready.
 
-### Start Cider from Emacs:
+## Installation
 
-Put this in your Emacs config file:
-
-```
-(setq cider-cljs-lein-repl
-	"(do (require 'figwheel-sidecar.repl-api)
-         (figwheel-sidecar.repl-api/start-figwheel!)
-         (figwheel-sidecar.repl-api/cljs-repl))")
-```
-
-Navigate to a clojurescript file and start a figwheel REPL with `cider-jack-in-clojurescript` or (`C-c M-J`)
-
-### Run application:
+In order to deploy this application you will need to install the Serverless Framework using npm
 
 ```
-lein clean
-lein figwheel dev
+# Install serverless framework
+
+npm install -g serverless
+
+# Install serverless S3 plugin
+
+npm install --save serverless-finchnpm install
+
+# Setup AWS Credentials
+
+aws configure
 ```
 
-Figwheel will automatically push cljs changes to the browser.
-
-Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
-
-## Production Build
+## Tests
 
 ```
-lein clean
-lein uberjar
+lein test
 ```
 
-That should compile the clojurescript code first, and then create the standalone jar.
+## Deployment
 
-When you run the jar you can set the port the ring server will use by setting the environment variable PORT.
-If it's not set, it will run on port 3000 by default.
-
-To deploy to heroku, first create your app:
-
-```
-heroku create
-```
-
-Then deploy the application:
-
-```
-git push heroku master
-```
-
-To compile clojurescript to javascript:
+### Front-end application:
 
 ```
 lein clean
 lein cljsbuild once min
+serverless client deploy -s dev
 ```
+
+### Back-end application:
+
+```
+lein clean
+lein uberjar
+serverless deploy -s dev
+```
+
+
+## Other Libraries
+
+https://github.com/mhjort/ring-apigw-lambda-proxy - APIGateway Ring Middleware
+https://github.com/uswitch/lambada - Clojure library for writing Lambda functions

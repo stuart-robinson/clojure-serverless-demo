@@ -37,11 +37,15 @@ resources:
       Properties:
         TableName: messages-${self:provider.stage}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: channel
             AttributeType: S
+          - AttributeName: order
+            AttributeType: N
         KeySchema:
-          - AttributeName: id
+          - AttributeName: channel
             KeyType: HASH
+          - AttributeName: order
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 20
           WriteCapacityUnits: 5

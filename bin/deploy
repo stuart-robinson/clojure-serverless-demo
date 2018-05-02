@@ -1,0 +1,13 @@
+#!/bin/bash
+
+lein clean
+
+#build and deploy front-end
+
+lein cljsbuild once min
+serverless client deploy -s dev
+
+#build and deploy back-end
+
+lein uberjar
+serverless deploy -s dev

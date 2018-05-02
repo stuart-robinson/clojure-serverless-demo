@@ -39,24 +39,26 @@
 (re-frame/reg-event-db
  ::process-join-response
  (fn [db [_ response name]]
-   (re-frame/dispatch [::fetch-messages "foo"])
+   (re-frame/dispatch [::fetch-messages true])
    (assoc db :name name)))
 
 (re-frame/reg-event-db
  ::fetch-messages
- (fn [db [_ _]]
-   (GET
-    (str config/host "/fetch-messages")
-    {:response-format :json
-     :keywords? true
-     :handler       #(re-frame/dispatch [::process-fetch-messages-response %])
-     :error-handler #(re-frame/dispatch [::bad-response %])})
+ (fn [db [_ cached?]]
+   (let []
+     (GET
+      (str config/host "/fetch-messages")
+      {:response-format :json
+       :keywords? true
+       :handler       #(re-frame/dispatch [::process-fetch-messages-response %])
+       :error-handler #(re-frame/dispatch [::bad-response %])}
+      ))
    db))
 
 (re-frame/reg-event-db
  ::process-say-response
  (fn [db [_ response]]
-   (re-frame/dispatch [::fetch-messages "foo"])
+   (re-frame/dispatch [::fetch-messages true])
    db))
 
 (re-frame/reg-event-db
@@ -70,3 +72,12 @@
  (fn [db [_ response]]
    (.debug js/console response)
    db))
+
+
+(defn poll-for-new-messages [interval]
+  (js/setInterval #(re-frame/dispatch [::fetch-messages false]) interval))
+
+
+(re-frame.core/reg-fx
+ ::Interval
+ (poll-for-new-messages 1000))

@@ -14,7 +14,6 @@
                  [ring/ring-json "0.4.0"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [com.amazonaws/DynamoDBLocal "1.10.5.1"]
-                 [com.amazonaws/aws-java-sdk-dynamodb "1.11.320"]
                  [com.taoensso/faraday "1.9.0"]]
 
   :repositories [["dynamodblocal"  {:url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"}]]
