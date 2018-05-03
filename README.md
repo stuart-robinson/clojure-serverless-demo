@@ -15,7 +15,7 @@ npm install -g serverless
 
 # Install serverless S3 plugin
 
-npm install --save serverless-finchnpm install
+npm install --save serverless-finch
 
 # Setup AWS Credentials
 
