@@ -49,5 +49,6 @@ serverless deploy -s dev
 
 ## Other Libraries
 
-https://github.com/mhjort/ring-apigw-lambda-proxy - APIGateway Ring Middleware
-https://github.com/uswitch/lambada - Clojure library for writing Lambda functions
+* https://github.com/mhjort/ring-apigw-lambda-proxy - APIGateway Ring Middleware
+
+* https://github.com/uswitch/lambada - Clojure library for writing Lambda functions
